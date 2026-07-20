@@ -29,6 +29,29 @@ Some prompts to answer:
 
 You can include a simple diagram or bullet list if helpful.
 
+This recommender scores each song against a user by combining four independent signals into a single weighted sum: hard categorical matches on genre and mood (all-or-nothing bonuses), a closeness-based score on energy that rewards proximity to the user's target rather than raw magnitude, and a boolean check on whether the song's acousticness falls on the same side of a threshold as the user's stated preference. Because mood is weighted more heavily than the other three, the system prioritizes matching the emotional tone the user wants over strict genre labels or exact energy levels. Basically a song in an unexpected genre can still rank well if its mood is right, but a mood mismatch is hard to compensate for. Scoring stays local and per-song, while a separate ranking step handles sorting, tie-breaking, and top-k selection across the whole catalog, keeping "how good is this match" cleanly separate from "what's the best list to show.
+
+Here are the specific features my 'Song' and 'User Profile' objects will use in this simulation
+
+Song (scored by attributes):
+- genre: categorical, matched against favorite_genre
+- mood: categorical, matched against favorite_mood (highest weight)
+- energy: continuous (0–1 scale), scored by closeness to target_energy
+- acousticness: continuous (0–1 scale), thresholded into a boolean and compared to likes_acoustic
+
+User Profile(preferences the score is computed aganist):
+- favorite_genre: target value for the genre match
+- favorite_mood: target value for the mood match, and the source of the extra weighting
+- target_energy: target value for the energy closeness calculation
+likes_acoustic — boolean target for the acousticness threshold check
+
+Below is the 'Algorithm Recipe':
+- Mood Fit (+2.0)
+- Genre (+1.0)
+- Energy closeness (weighted equally to mood +2.0)
+- Acousticness (threshold check + or - 0.5, based on user preference)
+
+Edge-case risk: because energy closeness + acousticness can together contribute up to 2.5 points, a song with the wrong mood and genre but energy landing exactly on target can occasionally outscore a song that correctly matches mood but misses on energy and acousticness — so strong continuous-signal alignment can, in rare cases, mask a poor categorical fit.
 ---
 
 ## Getting Started
@@ -72,11 +95,24 @@ Paste a sample of your recommender's output here as a text block so a reader can
 
 ```
 # e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+# User profile: favorite_genre: "pop", favorite_mood: "happy", target_energy: 0.8, likes_acoustic: False
+#Top Recommendations
+#========================================
+#1. Sunrise City (Neon Echo) - Score: 5.46
+#   Because: mood match (+2.0), genre match (+1.0), energy #closeness (+2.0), acousticness match (+0.5)
+#----------------------------------------
+#2. Rooftop Lights (Indigo Parade) - Score: 4.42
+#   Because: mood match (+2.0), energy closeness (+1.9), #acousticness match (+0.5)
+#----------------------------------------
+#3. Gym Hero (Max Pulse) - Score: 3.24
+#   Because: genre match (+1.0), energy closeness (+1.7), #acousticness match (+0.5)
+#----------------------------------------
+#4. Concrete Kingdom (MC Ledger) - Score: 2.46
+#   Because: energy closeness (+2.0), acousticness match (+0.#5)
+#----------------------------------------
+#5. Fuego Nights (Mariposa Sol) - Score: 2.40
+#   Because: energy closeness (+1.9), acousticness match (+0.#5)
+#----------------------------------------
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
