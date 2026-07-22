@@ -93,8 +93,6 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
-
 ```
 # e.g.:
 # User profile: favorite_genre: "pop", favorite_mood: "happy", target_energy: 0.8, likes_acoustic: False
@@ -123,25 +121,15 @@ Paste a sample of your recommender's output here as a text block so a reader can
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
-
+When I changed weights like making genre a higher priority, the model would only consider genre match for the top recommendations. Also when my user preferences are vague or empty, the model recommends a stronger mix of different genres and moods. 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
 You will go deeper on this in your model card.
+The model doesn't handle specific contradictory edge cases. For example, if someone likes sad music that high energy. It also doesn't know lyrics or language so that would have to be added in to the overall scoring logic. The dataset also need to have greater diversity and more data overall to understand unique music tastes. 
+
+Also if this was a application like Spotify or Youtube Music, we would also consider user interactions like likes, plays, skips, etc. 
 
 ---
 
