@@ -52,6 +52,8 @@ Below is the 'Algorithm Recipe':
 - Acousticness (threshold check + or - 0.5, based on user preference)
 
 Edge-case risk: because energy closeness + acousticness can together contribute up to 2.5 points, a song with the wrong mood and genre but energy landing exactly on target can occasionally outscore a song that correctly matches mood but misses on energy and acousticness — so strong continuous-signal alignment can, in rare cases, mask a poor categorical fit.
+
+
 ---
 
 ## Getting Started
@@ -149,10 +151,4 @@ Read and complete `model_card.md`:
 
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-
-
-
+What I mainly learned in this recommender project is that logic has a realw way of capturing human taste in personal activities like listening to music. It also made me realize how important human insight is when building a algorithmic framework because I can use to own judgement to see if the logic actually matches what someone is looking for in music recommendations. Biases and unfairness could show up when models don't address unqiue or edges cases. It can also show up in the dataset since that is what the model compares with so data diversity is very important to ensure the model supports different lived expriences. 
